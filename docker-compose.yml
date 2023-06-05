@@ -1,5 +1,16 @@
 version: '3.7'
 
 services:
-  api: {}
-  client: {}
+  api:
+    build: api
+    ports:
+      - 5000:5000 # flask default port
+    environment:
+      - PORT=5000
+      - CLIENT_ORIGIN=http://localhost:1234
+      # make sure the server views can make requests to itself; annoying and
+      # needs to go once the FE is hooked up
+      - HOST=127.0.0.1
+    command: [ "flask", "--app", "app/main.py", "--debug", "run", "-h", "0.0.0.0" ]
+    volumes:
+      - ./api/app:/server/app
